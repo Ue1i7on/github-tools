@@ -1,0 +1,1 @@
+Nothing needs to be ignored in this case. The change list contains only a shell script file (`git-forge-switch.sh`) which is a source code file and should not be ignored. There are no build artifacts, dependencies, or temporary files in the changes.
