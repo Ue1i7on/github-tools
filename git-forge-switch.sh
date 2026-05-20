@@ -528,10 +528,10 @@ funcao_push_both() {
   log "Remote 'github' não configurado."
  fi
 
- # Push para Forgejo se existir
+ # Push para Forgejo se existir (com --force)
  if git remote get-url forgejo >/dev/null 2>&1; then
-  log "Push para Forgejo..."
-  if git push forgejo "$BRANCH"; then
+  log "Push para Forgejo (--force)..."
+  if git push --force forgejo "$BRANCH"; then
    log "  Forgejo: Sucesso!"
   else
    log "  Forgejo: Falha!"
