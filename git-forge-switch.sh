@@ -547,6 +547,70 @@ funcao_push_both() {
 }
 
 # ============================================
+# FUNÇÃO: Pull apenas do GitHub
+# ============================================
+funcao_pull_github() {
+ validar_git_repo || return 1
+
+ BRANCH=$(git branch --show-current)
+ log "=========================================="
+ log "  Pull do GitHub"
+ log "=========================================="
+ log "Branch: $BRANCH"
+ log ""
+
+ if git remote get-url github >/dev/null 2>&1; then
+  log "Pull do GitHub..."
+  if git pull github "$BRANCH" --rebase; then
+   log "  GitHub: Sucesso!"
+  else
+   log "  GitHub: Falha ou sem alterações."
+  fi
+ else
+  log "Erro: Remote 'github' não configurado."
+  log "Execute: $0 --setup-dual"
+  return 1
+ fi
+
+ log ""
+ log "Operação concluída."
+
+ return 0
+}
+
+# ============================================
+# FUNÇÃO: Pull apenas do Forgejo
+# ============================================
+funcao_pull_forgejo() {
+ validar_git_repo || return 1
+
+ BRANCH=$(git branch --show-current)
+ log "=========================================="
+ log "  Pull do Forgejo"
+ log "=========================================="
+ log "Branch: $BRANCH"
+ log ""
+
+ if git remote get-url forgejo >/dev/null 2>&1; then
+  log "Pull do Forgejo..."
+  if git pull forgejo "$BRANCH" --rebase; then
+   log "  Forgejo: Sucesso!"
+  else
+   log "  Forgejo: Falha ou sem alterações."
+  fi
+ else
+  log "Erro: Remote 'forgejo' não configurado."
+  log "Execute: $0 --setup-dual"
+  return 1
+ fi
+
+ log ""
+ log "Operação concluída."
+
+ return 0
+}
+
+# ============================================
 # FUNÇÃO: Pull de Ambos
 # ============================================
 funcao_pull_both() {
@@ -603,6 +667,8 @@ Opções:
   --setup-dual          Configurar remotes duplos (github e forgejo)
   --push-both           Fazer push para ambos os remotes
   --pull-both           Fazer pull de ambos os remotes
+  --pull-github         Fazer pull apenas do GitHub
+  --pull-forgejo        Fazer pull apenas do Forgejo
   --config-github       Configurar usuário do GitHub
   --config-forgejo      Configurar credenciais do Forgejo
   --help                Mostrar esta ajuda
@@ -614,6 +680,8 @@ Exemplos:
   $0 --setup-dual                # Configurar ambos os remotes
   $0 --push-both                 # Push para GitHub e Forgejo
   $0 --pull-both                 # Pull de GitHub e Forgejo
+  $0 --pull-github               # Pull apenas do GitHub
+  $0 --pull-forgejo              # Pull apenas do Forgejo
 
 Descrição:
   Este script permite alternar facilmente entre GitHub e Forgejo
@@ -653,6 +721,12 @@ case "$1" in
  ;;
 --pull-both)
  funcao_pull_both
+ ;;
+--pull-github)
+ funcao_pull_github
+ ;;
+--pull-forgejo)
+ funcao_pull_forgejo
  ;;
 --config-github)
  funcao_config_github
